@@ -47,8 +47,10 @@ function crawl {
 		--quiet \
 		-P $PREFIX $2
 
-	if [ $? -ne 0 ]; then
-		say "retrieved index files from $2 . some errors occured. (wget exit code: $?)"
+	code=$?
+
+	if [ $code -ne 0 ]; then
+		say "retrieved index files from $2 . some errors occured. (wget exit code: $code)"
 	else
 		say "successfully retrieved index files from $2 "
 	fi
