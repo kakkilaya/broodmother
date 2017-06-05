@@ -3,8 +3,6 @@
 APPDIR="$HOME/.spider"
 LISTFILE="$APPDIR/index-sites"
 LOGFILE="$APPDIR/log"
-LINKSFILE="$APPDIR/links"
-LINKSTMP="$APPDIR/links-new"
 PREFIX="$APPDIR/sites"
 
 function say {
