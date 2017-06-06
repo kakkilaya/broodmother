@@ -54,6 +54,30 @@ function crawl {
 	fi
 }
 
+function grab-link {
+	if [ $1 -eq 1 ] && [ -f links ] && [ ! -f links.tmp ]; then
+		exit
+	fi
+
+	if [ -f links.tmp ]; then
+		rm links.tmp
+	fi
+
+	path=$(grep -oP '(?<=\<title\>Index of )[^<]+' $2)
+
+	path=$(python -c "import urllib.parse; print(urllib.parse.quote(\"$path\"))")
+
+	lines=$(grep -oP '(?<=href\=")[^"]+' $2 | tail -n +2)
+
+	for line in $lines; do
+		echo $3$path$line >> links.tmp
+	done
+
+	if [ -f links.tmp ]; then
+		mv links.tmp links
+	fi
+}
+
 function grab {
 	if [ ! -d "$PREFIX/$2" ]; then
 		say "error: cannot grab links for $2 . $PREFIX/$2 does not exist"
@@ -66,7 +90,9 @@ function grab {
 		say "resumed grabbing links from $2 "
 	fi
 
-	find "$PREFIX/$2" -type f -name index.html -execdir grab-link.sh $1 "{}" "$2" ";"
+	export -f grab-link
+
+	find "$PREFIX/$2" -type f -name index.html -execdir bash -c "grab-link $1 \"{}\" \"$2\"" ";"
 		
 	if [ $? -ne 0 ]; then
 		say "error: failed to grab all links from $2 . halting thread"
