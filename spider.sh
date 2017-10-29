@@ -82,6 +82,8 @@ function grab {
 	if [ ! -d "$PREFIX/$2" ]; then
 		say "error: cannot grab links for $2 . $PREFIX/$2 does not exist"
 		quit $2
+	else
+		say "$2 . $PREFIX/$2 found"
 	fi
 
 	if [ $1 -eq 0 ]; then
